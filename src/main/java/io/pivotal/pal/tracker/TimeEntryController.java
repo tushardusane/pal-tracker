@@ -46,9 +46,7 @@ public class TimeEntryController {
             response = new ResponseEntity<>(HttpStatus.NOT_FOUND);
         else
             response = new ResponseEntity<>(result, HttpStatus.OK);
-
         return response;
-
     }
 
     @DeleteMapping("{id}")
