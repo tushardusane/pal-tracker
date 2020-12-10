@@ -2,11 +2,21 @@
 applications:
   - name: pal-tracker
     path: build/libs/pal-tracker.jar
-    #random-route: true
+    buildpacks:
+      - java_buildpack_offline
+    stack: cflinuxfs3
+    memory: 512M
+    disk_quota: 256M
+    instances: 3
+    health-check-type: http
+    health-check-http-endpoint: /actuator/health/liveness
+    timeout: 20
     routes:
       - route: pal-tracker-tnd1.apps.evans.pal.pivotal.io
+    services:
+      - mydb
     env:
       WELCOME_MESSAGE: Hello from the review environment
-      JBP_CONFIG_OPEN_JDK_JRE: '{ jre: { version: 11.+ } }'
-    services:
-      - tracker-database
+      JBP_CONFIG_OPEN_JDK_JRE: '{ jre: { version: 11.+ }, memory_calculator: { stack_threads: 100 } }'
+      MANAGEMENT_ENDPOINTS_WEB_EXPOSURE_INCLUDE: 'info,health,palTrackerFailure'
+      MANAGEMENT_HEALTH_PROBES_ENABLED: true
